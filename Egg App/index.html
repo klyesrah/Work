@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Egg Farm Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>🥚 Smart Egg Farm Tracker</h1>
+    
+    <!-- Egg Logging Section -->
+    <section id="log-section">
+        <h2>Log Egg Production</h2>
+        <input type="number" id="eggCount" placeholder="Enter egg count">
+        <button onclick="logEggProduction()">Log</button>
+    </section>
+
+    <!-- Chart Section -->
+    <section id="chart-section">
+        <h2>Production Trends</h2>
+        <canvas id="eggChart"></canvas>
+    </section>
+
+    <!-- Disease Checker -->
+    <section id="disease-section">
+        <h2>Check Disease Symptoms</h2>
+        <input type="text" id="symptomInput" placeholder="Enter symptom (e.g., coughing)">
+        <button onclick="checkDisease()">Check</button>
+        <p id="diseaseOutput"></p>
+    </section>
+
+    <!-- Chatbot Section -->
+    <section id="chatbot-section">
+        <h2>Farm Chatbot</h2>
+        <input type="text" id="chatInput" placeholder="Ask a question">
+        <button onclick="chatbotReply()">Ask</button>
+        <p id="chatOutput"></p>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
