@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Disease Detection</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Disease Detection</h1>
+    <nav>
+      <button onclick="window.location.href='index.html'">Home</button>
+      <button onclick="window.location.href='egg-tracker.html'">Egg Production</button>
+      <button onclick="window.location.href='chatbot.html'">Farm Chatbot</button>
+    </nav>
+  </header>
+  <main>
+    <section>
+      <h2>Enter Chicken Symptoms</h2>
+      <p>Type a symptom (e.g., coughing, diarrhea) to detect potential diseases:</p>
+      <input type="text" id="symptomInput" placeholder="Enter symptom" />
+      <button id="checkButton">Check Disease</button>
+      <div id="diseaseOutput"></div>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2025 Smart Egg Farm Tracker</p>
+  </footer>
+  <script src="disease.js"></script>
+</body>
+</html>

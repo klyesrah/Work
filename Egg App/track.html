@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Track Egg Production</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>📊 Track Egg Production</h1>
+        <nav><a href="index.html">🏠 Home</a></nav>
+    </header>
+    
+    <main>
+        <form id="eggForm">
+            <label>Farm Name:</label>
+            <input type="text" id="farmName" required>
+            
+            <label>Eggs Collected:</label>
+            <input type="number" id="eggsCollected" required>
+            
+            <button type="submit">Save Data</button>
+        </form>
+
+        <canvas id="eggChart"></canvas>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.getElementById("eggForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            addEggData(document.getElementById("farmName").value, document.getElementById("eggsCollected").value);
+        });
+
+        displayEggChart();
+    </script>
+</body>
+</html>

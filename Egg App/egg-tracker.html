@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Egg Production Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Chart.js for dynamic charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Egg Production Tracker</h1>
+    <nav>
+      <button onclick="window.location.href='index.html'">Home</button>
+      <button onclick="window.location.href='disease.html'">Disease Detection</button>
+      <button onclick="window.location.href='chatbot.html'">Farm Chatbot</button>
+    </nav>
+  </header>
+  <main>
+    <section>
+      <h2>Log Today's Egg Count</h2>
+      <p>Enter the number of eggs collected today and click "Log" to update production data.</p>
+      <input type="number" id="eggCount" placeholder="Egg count" />
+      <button id="logButton">Log</button>
+    </section>
+    <section>
+      <h2>Production Trends</h2>
+      <canvas id="eggChart" width="400" height="200"></canvas>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2025 Smart Egg Farm Tracker</p>
+  </footer>
+  <script src="eggTracker.js"></script>
+</body>
+</html>
