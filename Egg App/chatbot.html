@@ -3,30 +3,114 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Farm Chatbot</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Farm Chatbot 🤖</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      color: #333;
+    }
+    header {
+      background: #31be12;
+      padding: 20px;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      font-size: 2.8em;
+      margin: 0;
+    }
+    p, input, button {
+      font-size: 1.1em;
+      margin: 10px;
+    }
+    input, button {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #4CAF50;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #chatOutput {
+      margin-top: 20px;
+      text-align: left;
+      display: inline-block;
+      max-width: 600px;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Farm Chatbot Assistant</h1>
-    <nav>
-      <button onclick="window.location.href='index.html'">Home</button>
-      <button onclick="window.location.href='egg-tracker.html'">Egg Production</button>
-      <button onclick="window.location.href='disease.html'">Disease Detection</button>
-    </nav>
+    <h1>Farm Chatbot 🤖🥚</h1>
   </header>
   <main>
-    <section>
-      <h2>Ask a Question</h2>
-      <p>Type your farming question below:</p>
-      <input type="text" id="chatInput" placeholder="Enter your question" />
-      <button id="askButton">Ask</button>
-      <div id="chatOutput"></div>
-    </section>
+    <p>Ask a question about your farm and receive expert advice.</p>
+    <input type="text" id="chatInput" placeholder="Enter your question" />
+    <button id="askChatbot">Ask</button>
+    <button id="showChatRecords">Show Q&A Records</button>
+    <div id="chatOutput"></div>
   </main>
-  <footer>
-    <p>&copy; 2025 Smart Egg Farm Tracker</p>
-  </footer>
-  <script src="chatbot.js"></script>
+  <script>
+    // Preloaded Q&A dataset (can be extended)
+    const defaultChatData = [
+      { question: "how to increase egg production", answer: "Feed hens a balanced diet, ensure proper lighting, and provide fresh water. 🥚" },
+      { question: "best food for hens", answer: "Layer feed with the right supplements works best for optimum production. 🥚" },
+      { question: "how to prevent diseases", answer: "Maintain cleanliness, proper ventilation, and schedule regular vaccinations. 🤒" }
+    ];
+
+    // Helper functions for the chatbot dataset
+    function loadChatDataset() {
+      const data = localStorage.getItem("chatDataset");
+      return data ? JSON.parse(data) : defaultChatData;
+    }
+    function saveChatDataset(dataset) {
+      localStorage.setItem("chatDataset", JSON.stringify(dataset));
+    }
+
+    let chatDataset = loadChatDataset();
+
+    // Event listener for asking the chatbot
+    document.getElementById("askChatbot").addEventListener("click", function() {
+      const chatInput = document.getElementById("chatInput");
+      const userQuestion = chatInput.value.toLowerCase();
+      let response = "I'm sorry, I don't have an answer for that. Please try another question.";
+      
+      // Find an exact match in our dataset
+      for (let i = 0; i < chatDataset.length; i++) {
+        if (chatDataset[i].question === userQuestion) {
+          response = chatDataset[i].answer;
+          break;
+        }
+      }
+      
+      document.getElementById("chatOutput").innerHTML =
+        `<p><strong>Q:</strong> ${chatInput.value}</p><p><strong>A:</strong> ${response}</p>`;
+      console.log("Chatbot dataset:", chatDataset);
+      chatInput.value = "";
+    });
+
+    // Show all chatbot Q&A records
+    document.getElementById("showChatRecords").addEventListener("click", function() {
+      const outputDiv = document.getElementById("chatOutput");
+      outputDiv.innerHTML = "";
+      chatDataset = loadChatDataset();
+      chatDataset.forEach((record, index) => {
+        const p = document.createElement("p");
+        p.textContent = `Record ${index + 1}: Q: "${record.question}" | A: "${record.answer}"`;
+        outputDiv.appendChild(p);
+      });
+      console.log("Chatbot dataset:", chatDataset);
+    });
+  </script>
 </body>
 </html>

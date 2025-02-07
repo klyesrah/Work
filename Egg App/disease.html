@@ -4,29 +4,197 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Disease Detection</title>
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f0f8ff;
+      transition: background-color 0.5s ease;
+      text-align: center;
+      color: #333;
+    }
+    header {
+      background: #36c013;
+      padding: 20px;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      font-size: 2.8em;
+      margin: 0;
+    }
+    p, input, button {
+      font-size: 1.1em;
+      margin: 10px;
+    }
+    input, button {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #4CAF50;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #diseaseOutput {
+      margin-top: 20px;
+    }
+    canvas {
+      margin-top: 20px;
+      max-width: 100%;
+    }
+    #diseaseBanner {
+      width: 300px;
+      margin-top: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+  <!-- Include Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <header>
-    <h1>Disease Detection</h1>
-    <nav>
-      <button onclick="window.location.href='index.html'">Home</button>
-      <button onclick="window.location.href='egg-tracker.html'">Egg Production</button>
-      <button onclick="window.location.href='chatbot.html'">Farm Chatbot</button>
-    </nav>
+    <h1>Disease Detection 🔎🥚</h1>
   </header>
   <main>
-    <section>
-      <h2>Enter Chicken Symptoms</h2>
-      <p>Type a symptom (e.g., coughing, diarrhea) to detect potential diseases:</p>
-      <input type="text" id="symptomInput" placeholder="Enter symptom" />
-      <button id="checkButton">Check Disease</button>
-      <div id="diseaseOutput"></div>
-    </section>
+    <p>Enter a symptom (e.g., "cough", "diarrhea") to check for potential diseases.</p>
+    <input type="text" id="symptomInput" placeholder="Enter symptom" />
+    <button id="checkDisease">Check Disease</button>
+    <button id="showDiseaseRecords">Show Records & Chart</button>
+    <div id="diseaseOutput"></div>
+    <!-- Banner image that changes based on disease severity -->
+    <img id="diseaseBanner" src="images/OIP (6).jpg" alt="Farm Health">
+    <canvas id="diseaseChart" width="400" height="200"></canvas>
   </main>
-  <footer>
-    <p>&copy; 2025 Smart Egg Farm Tracker</p>
-  </footer>
-  <script src="disease.js"></script>
+  <script>
+    // Simple disease database mapping keywords to diseases
+    const diseaseDatabase = {
+      "cough": "Avian Influenza",        // severe
+      "diarrhea": "Salmonella",           // moderate
+      "swollen": "Newcastle Disease",     // moderate
+      "lethargy": "Marek’s Disease",      // severe
+      "ruffled": "Fowl Pox"               // moderate
+    };
+
+    // Helper functions for disease dataset
+    function loadDiseaseDataset() {
+      const data = localStorage.getItem("diseaseDataset");
+      return data ? JSON.parse(data) : [];
+    }
+    function saveDiseaseDataset(dataset) {
+      localStorage.setItem("diseaseDataset", JSON.stringify(dataset));
+    }
+
+    let diseaseDataset = loadDiseaseDataset();
+    let diseaseChart = null;  // Chart instance
+
+    // Function to update the disease trend chart (bar chart)
+    function updateDiseaseChart() {
+      const ctx = document.getElementById("diseaseChart").getContext("2d");
+      // Count occurrences of each disease
+      const counts = {};
+      diseaseDataset.forEach(record => {
+        const d = record.disease;
+        counts[d] = (counts[d] || 0) + 1;
+      });
+      const labels = Object.keys(counts);
+      const data = labels.map(label => counts[label]);
+
+      if (diseaseChart) {
+        diseaseChart.data.labels = labels;
+        diseaseChart.data.datasets[0].data = data;
+        diseaseChart.update();
+      } else {
+        diseaseChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Disease Occurrences',
+              data: data,
+              backgroundColor: 'red'
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      }
+    }
+
+    // Change background and banner image based on disease severity
+    function updateVisuals(severity) {
+      if (severity === "severe") {
+        document.body.style.backgroundColor = "#FFCCCC"; // Light red
+        document.getElementById("diseaseBanner").src = "images/serious.png";
+      } else if (severity === "moderate") {
+        document.body.style.backgroundColor = "#FFF2CC"; // Light orange
+        document.getElementById("diseaseBanner").src = "images/moderate.png";
+      } else {
+        document.body.style.backgroundColor = "#CCFFCC"; // Light green
+        document.getElementById("diseaseBanner").src = "images/healthy.png";
+      }
+    }
+
+    // Check disease event
+    document.getElementById("checkDisease").addEventListener("click", function() {
+      const symptomInput = document.getElementById("symptomInput");
+      const symptom = symptomInput.value.toLowerCase();
+      let detectedDisease = "None";
+      for (const key in diseaseDatabase) {
+        if (symptom.includes(key)) {
+          detectedDisease = diseaseDatabase[key];
+          break;
+        }
+      }
+
+      const resultText = detectedDisease === "None"
+        ? "No known disease detected."
+        : `Possible Disease: ${detectedDisease}`;
+      document.getElementById("diseaseOutput").innerHTML = `<p>${resultText}</p>`;
+
+      // Determine severity based on disease (customize as needed)
+      let severity = "neutral";
+      if (detectedDisease === "Avian Influenza" || detectedDisease === "Marek’s Disease") {
+        severity = "severe";
+      } else if (detectedDisease === "Salmonella" || detectedDisease === "Newcastle Disease" || detectedDisease === "Fowl Pox") {
+        severity = "moderate";
+      }
+      updateVisuals(severity);
+
+      // Log the disease event if detected
+      if (detectedDisease !== "None") {
+        const record = { symptom: symptom, disease: detectedDisease, date: new Date().toLocaleDateString() };
+        diseaseDataset.push(record);
+        saveDiseaseDataset(diseaseDataset);
+        console.log("Logged disease event:", record);
+      }
+      symptomInput.value = "";
+    });
+
+    // Show disease records and update chart
+    document.getElementById("showDiseaseRecords").addEventListener("click", function() {
+      const outputDiv = document.getElementById("diseaseOutput");
+      outputDiv.innerHTML = "";
+      diseaseDataset = loadDiseaseDataset(); // Reload dataset
+      diseaseDataset.forEach((record, index) => {
+        const p = document.createElement("p");
+        p.textContent = `Record ${index + 1}: Symptom "${record.symptom}" detected as ${record.disease} on ${record.date}`;
+        outputDiv.appendChild(p);
+      });
+      console.log("Disease dataset:", diseaseDataset);
+      updateDiseaseChart();
+    });
+  </script>
 </body>
 </html>

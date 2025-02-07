@@ -1,46 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Egg Farm Tracker</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Egg Farm Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Inline CSS for quick customization; you may also use an external stylesheet */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f0f8ff;
+      color: #333;
+      transition: background-color 0.5s ease;
+    }
+    header {
+      background: #54d01a;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.8em;
+    }
+    nav {
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    nav button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+    }
+    nav button:hover {
+      background: #45a049;
+    }
+    main {
+      padding: 20px;
+      text-align: center;
+    }
+    .intro {
+      max-width: 800px;
+      margin: 0 auto;
+      font-size: 1.2em;
+      line-height: 1.6;
+    }
+    .intro h2 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    .intro p {
+      margin: 20px 0;
+    }
+    .intro img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 20px 0;
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      background: #52bd10;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      font-size: 0.9em;
+    }
+  </style>
 </head>
 <body>
-    <h1>🥚 Smart Egg Farm Tracker</h1>
-    
-    <!-- Egg Logging Section -->
-    <section id="log-section">
-        <h2>Log Egg Production</h2>
-        <input type="number" id="eggCount" placeholder="Enter egg count">
-        <button onclick="logEggProduction()">Log</button>
-    </section>
-
-    <!-- Chart Section -->
-    <section id="chart-section">
-        <h2>Production Trends</h2>
-        <canvas id="eggChart"></canvas>
-    </section>
-
-    <!-- Disease Checker -->
-    <section id="disease-section">
-        <h2>Check Disease Symptoms</h2>
-        <input type="text" id="symptomInput" placeholder="Enter symptom (e.g., coughing)">
-        <button onclick="checkDisease()">Check</button>
-        <p id="diseaseOutput"></p>
-    </section>
-
-    <!-- Chatbot Section -->
-    <section id="chatbot-section">
-        <h2>Farm Chatbot</h2>
-        <input type="text" id="chatInput" placeholder="Ask a question">
-        <button onclick="chatbotReply()">Ask</button>
-        <p id="chatOutput"></p>
-    </section>
-
-    <script src="script.js"></script>
+  <header>
+    <h1>Smart Egg Farm Tracker</h1>
+    <nav>
+      <button onclick="window.location.href='egg-tracker.html'">Egg Production</button>
+      <button onclick="window.location.href='disease.html'">Disease Detection</button>
+      <button onclick="window.location.href='chatbot.html'">Farm Chatbot</button>
+    </nav>
+  </header>
+  <main>
+    <div class="intro">
+      <h2>Welcome to Your Modern Farm Management Solution</h2>
+      <p>
+        Experience a state-of-the-art solution designed to streamline your farm operations. Our platform
+        provides real-time tracking of egg production, dynamic disease detection, and expert farming advice
+        through an intuitive chatbot assistant.
+      </p>
+      <img class="banner" src="images/th (6).jpg">
+      <p>
+        Use the navigation buttons above to explore our features. Log daily egg counts and visualize production
+        trends with interactive charts, or enter observed symptoms to quickly detect potential diseases. Our
+        integrated chatbot offers expert guidance to ensure your flock stays healthy and productive.
+      </p>
+      <p>
+        Designed with a clean, modern interface and a vibrant color scheme inspired by the natural hues of a healthy farm,
+        our tracker makes managing your farm both efficient and enjoyable.
+      </p>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2025 Smart Egg Farm Tracker</p>
+  </footer>
 </body>
 </html>

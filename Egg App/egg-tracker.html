@@ -3,38 +3,143 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Egg Production Tracker</title>
-  <link rel="stylesheet" href="styles.css" />
-  <!-- Chart.js for dynamic charts -->
+  <title>Egg Tracker 🥚</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+      text-align: center;
+    }
+    header {
+      background: #14bb0e;
+      padding: 20px;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      font-size: 2.8em;
+      margin: 0;
+    }
+    p {
+      font-size: 1.1em;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #4CAF50;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #eggOutput {
+      margin-top: 20px;
+    }
+    canvas {
+      margin-top: 20px;
+      max-width: 100%;
+    }
+  </style>
+  <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js"></script>
 </head>
 <body>
   <header>
-    <h1>Egg Production Tracker</h1>
-    <nav>
-      <button onclick="window.location.href='index.html'">Home</button>
-      <button onclick="window.location.href='disease.html'">Disease Detection</button>
-      <button onclick="window.location.href='chatbot.html'">Farm Chatbot</button>
-    </nav>
+    <h1>Egg Production Tracker 🥚</h1>
   </header>
   <main>
-    <section>
-      <h2>Log Today's Egg Count</h2>
-      <p>Enter the number of eggs collected today and click "Log" to update production data.</p>
-      <input type="number" id="eggCount" placeholder="Egg count" />
-      <button id="logButton">Log</button>
-    </section>
-    <section>
-      <h2>Production Trends</h2>
-      <canvas id="eggChart" width="400" height="200"></canvas>
-    </section>
+    <p>Enter today's egg count (🥚) and add it to your records.</p>
+    <input type="number" id="eggInput" placeholder="Enter egg count" />
+    <button id="addEggRecord">Add Record</button>
+    <button id="showEggRecords">Show Records & Chart</button>
+    <div id="eggOutput"></div>
+    <canvas id="eggChart" width="400" height="200"></canvas>
   </main>
-  <footer>
-    <p>&copy; 2025 Smart Egg Farm Tracker</p>
-  </footer>
-  <script src="eggTracker.js"></script>
+  <script>
+    // Helper functions for Local Storage dataset
+    function loadEggDataset() {
+      const data = localStorage.getItem("eggDataset");
+      return data ? JSON.parse(data) : [];
+    }
+    function saveEggDataset(dataset) {
+      localStorage.setItem("eggDataset", JSON.stringify(dataset));
+    }
+
+    let eggDataset = loadEggDataset();
+    let eggChart = null; // Chart instance
+
+    // Function to update the egg production chart
+    function updateEggChart() {
+      const ctx = document.getElementById("eggChart").getContext("2d");
+      const labels = eggDataset.map((record, index) => "Record " + (index + 1));
+      const data = eggDataset.map(record => record.eggCount);
+      
+      if (eggChart) {
+        eggChart.data.labels = labels;
+        eggChart.data.datasets[0].data = data;
+        eggChart.update();
+      } else {
+        eggChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Egg Count',
+              data: data,
+              borderColor: 'blue',
+              backgroundColor: 'rgba(135,206,250,0.2)',
+              fill: true,
+              tension: 0.2
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      }
+    }
+
+    // Add egg record event
+    document.getElementById("addEggRecord").addEventListener("click", function() {
+      const eggInput = document.getElementById("eggInput");
+      const eggCount = parseInt(eggInput.value);
+      if (isNaN(eggCount) || eggCount < 0) {
+        alert("Please enter a valid egg count!");
+        return;
+      }
+      const record = { eggCount: eggCount, date: new Date().toLocaleDateString() };
+      eggDataset.push(record);
+      saveEggDataset(eggDataset);
+      eggInput.value = "";
+      console.log("Added egg record:", record);
+    });
+
+    // Show records and update chart
+    document.getElementById("showEggRecords").addEventListener("click", function() {
+      const outputDiv = document.getElementById("eggOutput");
+      outputDiv.innerHTML = "";
+      eggDataset = loadEggDataset(); // reload dataset
+      eggDataset.forEach((record, index) => {
+        const p = document.createElement("p");
+        p.textContent = `Record ${index + 1}: ${record.eggCount} 🥚 on ${record.date}`;
+        outputDiv.appendChild(p);
+      });
+      console.log("Egg dataset:", eggDataset);
+      updateEggChart();
+    });
+  </script>
 </body>
 </html>
